@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estúdio Python</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Figtree:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2ef;--panel:#fbfcfb;--ink:#1c2927;--mute:#61736f;--line:#cfd9d5;--acc:#0e7468;--acc-ink:#fff;--err:#c0390b;--errbg:#fde8df;--ok:#17724a;--out:#142321;--outink:#d7efe8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a19;--panel:#17252.3;--panel:#172523;--ink:#e0ece8;--mute:#8aa29c;--line:#2a3d3a;--acc:#35b9a5;--acc-ink:#06201c;--err:#ff8a5c;--errbg:#3a2018;--ok:#5fd39b;--out:#0b1312;--outink:#cdeee5}}
+:root[data-theme="dark"]{--bg:#101a19;--panel:#172523;--ink:#e0ece8;--mute:#8aa29c;--line:#2a3d3a;--acc:#35b9a5;--acc-ink:#06201c;--err:#ff8a5c;--errbg:#3a2018;--ok:#5fd39b;--out:#0b1312;--outink:#cdeee5}
+:root{--c-kw:#b3367a;--c-bi:#0e6fa3;--c-st:#2f7d32;--c-cm:#7a8a86;--c-nu:#b8570b;--c-df:#7a45c7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c-kw:#ff7eb6;--c-bi:#6cc4ff;--c-st:#9be28f;--c-cm:#6f8782;--c-nu:#ffb36b;--c-df:#c9a2ff}}
+:root[data-theme="dark"]{--c-kw:#ff7eb6;--c-bi:#6cc4ff;--c-st:#9be28f;--c-cm:#6f8782;--c-nu:#ffb36b;--c-df:#c9a2ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:500 14px/1.4 Figtree,system-ui,sans-serif;display:flex;flex-direction:column;gap:8px;padding:8px}
+.bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+input,select,button{font:inherit;color:inherit;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 10px;min-height:36px}
+input{flex:1;min-width:110px}
+button{cursor:pointer;font-weight:700}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+button.run{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+button.sec{background:transparent}
+.sp{flex:1}
+.ed{flex:1;min-height:150px;display:flex;border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden}
+#gut{padding:10px 8px 10px 10px;text-align:right;color:var(--mute);font:400 13px/20px "JetBrains Mono",ui-monospace,monospace;overflow:hidden;user-select:none;background:var(--bg);min-width:42px;white-space:pre}
+#gut b{display:block;font-weight:600}
+#gut b.e{background:var(--err);color:#fff;border-radius:3px;padding:0 3px}
+.wrap{flex:1;position:relative;min-width:0}
+#hl,#code{position:absolute;inset:0;width:100%;height:100%;margin:0;border:0;border-radius:0;padding:10px;font:400 13px/20px "JetBrains Mono",ui-monospace,monospace;white-space:pre;tab-size:4;letter-spacing:0}
+#hl{overflow:hidden;pointer-events:none;color:var(--ink)}
+#code{resize:none;background:transparent;color:transparent;caret-color:var(--ink);overflow:auto;outline:none;min-height:0}
+#code::selection{background:rgba(14,116,104,.3)}
+.k{color:var(--c-kw);font-weight:600}.b{color:var(--c-bi)}.s{color:var(--c-st)}.c{color:var(--c-cm);font-style:italic}.n{color:var(--c-nu)}.d{color:var(--c-df);font-weight:600}
+#sug{display:flex;gap:6px;overflow-x:auto;min-height:34px;align-items:center}
+#sug button{white-space:nowrap;padding:4px 10px;min-height:30px;font:600 13px "JetBrains Mono",ui-monospace,monospace;border-radius:999px}
+#sug small{color:var(--mute)}
+#st{padding:7px 10px;border-radius:8px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--ok)}
+#st.bad{background:var(--errbg);color:var(--err);border-color:var(--err)}
+#out{height:30%;min-height:110px;margin:0;background:var(--out);color:var(--outink);border-radius:10px;padding:10px;overflow:auto;font:400 13px/1.5 "JetBrains Mono",ui-monospace,monospace;white-space:pre-wrap}
+#out .er{color:#ff9d78}
+#mod{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}
+#mod[hidden]{display:none}
+#mod .box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;width:min(420px,100%);display:flex;flex-direction:column;gap:10px}
+#mq{font-weight:700;white-space:pre-wrap}
+@media (min-width:820px){body{padding:14px;max-width:1100px;margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <input id="name" value="meu_codigo.py" aria-label="Nome do arquivo" spellcheck="false">
+  <select id="files" aria-label="Códigos salvos"></select>
+</div>
+<div class="bar">
+  <button id="save">Salvar</button>
+  <button id="dl" class="sec">Baixar .py</button>
+  <button id="new" class="sec">Novo</button>
+  <button id="del" class="sec">Excluir</button>
+  <span class="sp"></span>
+  <button id="chk">Compilar</button>
+  <button id="run" class="run">Executar</button>
+</div>
+<div class="ed"><div id="gut"></div><div class="wrap"><pre id="hl" aria-hidden="true"></pre><textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Editor de código Python"></textarea></div></div>
+<div id="sug" aria-label="Sugestões"></div>
+<div id="st" role="status">Pronto.</div>
+<pre id="out" aria-live="polite"></pre>
+<div id="mod" hidden><div class="box"><label id="mq" for="minp"></label><input id="minp" autocomplete="off" spellcheck="false"><button id="mok" class="run">Enviar</button></div></div>
+
+<script>
+(function(){
+const S=[["https://skulpt.org/js/skulpt.min.js","https://skulpt.org/js/skulpt-stdlib.js"],["https://cdn.jsdelivr.net/gh/skulpt/skulpt-dist/skulpt.min.js","https://cdn.jsdelivr.net/gh/skulpt/skulpt-dist/skulpt-stdlib.js"],["https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js","https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"],["https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt.min.js","https://cdnjs.cloudflare.com/ajax/libs/skulpt/1.2.0/skulpt-stdlib.js"]];
+function ld(u){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=()=>no(u);document.head.appendChild(s)})}
+window.skReady=(async()=>{for(const [a,b] of S){try{await ld(a);await ld(b);if(window.Sk&&Sk.builtinFiles)return true}catch(e){(window.skFail=window.skFail||[]).push(String(e))}}return false})();
+})();
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const hl=$('hl'),code=$('code'),gut=$('gut'),st=$('st'),out=$('out'),sug=$('sug'),files=$('files'),nameEl=$('name');
+const START='# Bem-vindo ao Estúdio Python\ndef saudacao(nome):\n    return "Olá, " + nome + "!"\n\nfor i in range(3):\n    print(i, saudacao("mundo"))\n';
+const KW='False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield'.split(' ');
+const BI='print input len range int float str list dict set tuple bool sum min max abs round sorted reversed enumerate zip map filter open type isinstance any all'.split(' ');
+const MOD=['math','random','time','string','json','re','collections'];
+const MET=['append','extend','insert','remove','pop','sort','reverse','keys','values','items','get','join','split','strip','replace','upper','lower','format','startswith','endswith','find','count','index'];
+const SN={
+ 'for':'for i in range(\u0001):\n    ','while':'while \u0001:\n    ','if':'if \u0001:\n    ','def':'def \u0001():\n    ','class':'class \u0001:\n    def __init__(self):\n        ','try':'try:\n    \u0001\nexcept Exception as e:\n    print(e)\n','print':'print(\u0001)','import':'import \u0001','with':'with open("arquivo.txt") as f:\n    \u0001'
+};
+// armazenamento seguro
+let mem={},cur='meu_codigo.py';
+const load=()=>{try{return JSON.parse(localStorage.getItem('pyide')||'{}')}catch(e){return mem}};
+const store=o=>{mem=o;try{localStorage.setItem('pyide',JSON.stringify(o));return true}catch(e){return false}};
+function refreshFiles(){const f=load();files.innerHTML='<option value="">Códigos salvos…</option>'+Object.keys(f).map(k=>`<option>${k.replace(/</g,'&lt;')}</option>`).join('')}
+// gutter e erros
+let errLine=0;
+function gutter(){const n=code.value.split('\n').length;let h='';for(let i=1;i<=n;i++)h+=`<b${i===errLine?' class="e"':''}>${i}</b>`;gut.innerHTML=h;paint();sync()}
+function sync(){gut.scrollTop=code.scrollTop;hl.scrollTop=code.scrollTop;hl.scrollLeft=code.scrollLeft}
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function paint(){let prev='';
+ hl.innerHTML=code.value.replace(/(#.*$)|("""[\s\S]*?(?:"""|$)|'''[\s\S]*?(?:'''|$)|"(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?)|\b(\d+\.?\d*)\b|\b([A-Za-z_]\w*)\b/gm,(m,cm,str,num,id)=>{
+  let cls='';if(cm)cls='c';else if(str)cls='s';else if(num)cls='n';else if(id){if(prev==='def'||prev==='class')cls='d';else if(KW.includes(id))cls='k';else if(BI.includes(id))cls='b';prev=id}
+  return cls?`<span class="${cls}">${esc(m)}</span>`:esc(m)})+'\n ';
+}
+code.addEventListener('scroll',sync);
+// análise
+function info(e){let line=0,msg='',tp=(e&&e.tp$name)||'Erro';
+ try{if(e.traceback&&e.traceback.length)line=e.traceback[e.traceback.length-1].lineno||e.traceback[0].lineno}catch(x){}
+ try{msg=e.args.v[0].v}catch(x){msg=String(e)}
+ if(!line){const m=String(e).match(/line (\d+)/);if(m)line=+m[1]}
+ if(tp==='ParseError')tp='SyntaxError';
+ const dic={'bad input':'código inválido (verifique dois-pontos, parênteses, aspas e indentação)','Unexpected indent':'indentação inesperada'};
+ return{line,msg:dic[msg]||msg,tp}}
+function askInput(p){p=p==null?'':String(p);return new Promise(res=>{const m=$('mod'),i=$('minp');$('mq').textContent=p||'O programa pediu um valor:';i.value='';m.hidden=false;setTimeout(()=>i.focus(),50);
+ const done=()=>{const v=i.value;m.hidden=true;$('mok').onclick=null;i.onkeydown=null;out.textContent+=p+v+'\n';Sk.execStart=Date.now();res(v)};
+ $('mok').onclick=done;i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();done()}}})}
+function sk(){Sk.configure({__future__:Sk.python3,output:t=>{out.textContent+=t},read:x=>{const b=x.split('/').pop();if(/\.py$/.test(b)){const f=Object.assign({},load());f[nameEl.value.trim()]=code.value;if(f[b]!==undefined)return f[b]}
+ if(!Sk.builtinFiles||!Sk.builtinFiles.files[x])throw"Arquivo não encontrado: "+x;return Sk.builtinFiles.files[x]},inputfun:askInput,execLimit:10000})}
+function check(){if(!window.Sk){return{line:0,msg:'O interpretador não carregou. Verifique a conexão.',tp:'Aviso'}}
+ try{sk();const p=Sk.parse('<stdin>',code.value);Sk.astFromParse(p.cst,'<stdin>',p.flags);return null}catch(e){return info(e)}}
+function showCheck(final){const r=check();errLine=r?r.line:0;gutter();
+ if(r){st.className='bad';st.textContent=`${r.tp}${r.line?' na linha '+r.line:''}: ${r.msg}`}
+ else{st.className='';st.textContent=final?'Compilado sem erros de sintaxe.':'Sem erros de sintaxe.'}
+ return r}
+let tm;code.addEventListener('input',()=>{gutter();clearTimeout(tm);tm=setTimeout(()=>showCheck(false),500);suggest()});
+// executar
+$('chk').onclick=()=>showCheck(true);
+$('run').onclick=()=>{out.textContent='';if(showCheck(false))return;
+ sk();const t0=performance.now();
+ Sk.misceval.asyncToPromise(()=>Sk.importMainWithBody('<stdin>',false,code.value,true)).then(()=>{
+  st.className='';st.textContent=`Executado em ${Math.round(performance.now()-t0)} ms.`},e=>{
+  const r=info(e);errLine=r.line;gutter();st.className='bad';st.textContent=`${r.tp}${r.line?' na linha '+r.line:''}: ${r.msg}`;
+  out.insertAdjacentHTML('beforeend',`<span class="er">${(r.tp+': '+r.msg).replace(/</g,'&lt;')}</span>`)})};
+// sugestões
+function words(){const s=new Set(code.value.match(/[A-Za-z_]\w{2,}/g)||[]);return[...s]}
+function suggest(){const pre=code.value.slice(0,code.selectionStart);const m=pre.match(/[A-Za-z_]\w*$/);sug.innerHTML='';
+ if(!m){sug.innerHTML='<small>As sugestões aparecem enquanto você digita. Tab aceita a primeira.</small>';return}
+ const w=m[0],lw=w.toLowerCase();const dot=pre.slice(0,-w.length).endsWith('.');
+ let pool=dot?MET:[...Object.keys(SN).map(k=>k+'\u2026'),...KW,...BI,...MOD,...words()];
+ const seen=new Set(),res=[];
+ for(const p of pool){const base=p.replace('\u2026','');if(base===w||seen.has(p)||!base.toLowerCase().startsWith(lw))continue;seen.add(p);res.push(p);if(res.length>=8)break}
+ if(!res.length){sug.innerHTML='<small>Sem sugestões.</small>';return}
+ res.forEach(p=>{const b=document.createElement('button');b.className='sec';b.textContent=p;b.onmousedown=ev=>{ev.preventDefault();accept(p,w)};sug.appendChild(b)})}
+function accept(p,w){const base=p.replace('\u2026','');let ins=p.endsWith('\u2026')?SN[base]:base+((BI.includes(base)&&!MOD.includes(base))?'(\u0001)':'');
+ const a=code.selectionStart-w.length,pos=ins.indexOf('\u0001');
+ const lineStart=code.value.lastIndexOf('\n',a-1)+1,ind=code.value.slice(lineStart,a).match(/^\s*/)[0];
+ ins=ins.replace(/\n/g,'\n'+ind);const p2=ins.indexOf('\u0001');ins=ins.replace('\u0001','');
+ code.setRangeText(ins,a,code.selectionStart,'end');const c=p2<0?a+ins.length:a+p2;code.setSelectionRange(c,c);code.focus();gutter();suggest();showCheck(false)}
+code.addEventListener('keydown',e=>{
+ if(e.key==='Tab'){e.preventDefault();const f=sug.querySelector('button');const m=code.value.slice(0,code.selectionStart).match(/[A-Za-z_]\w*$/);
+  if(f&&m)accept(f.textContent,m[0]);else{code.setRangeText('    ',code.selectionStart,code.selectionEnd,'end');gutter()}}
+ else if(e.key==='Enter'){const a=code.selectionStart,ls=code.value.lastIndexOf('\n',a-1)+1,line=code.value.slice(ls,a);
+  let ind=line.match(/^\s*/)[0];if(/:\s*$/.test(line))ind+='    ';e.preventDefault();code.setRangeText('\n'+ind,a,code.selectionEnd,'end');gutter()}
+ else if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();save()}
+ else if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();$('run').click()}});
+// arquivos
+function save(){let n=nameEl.value.trim()||'sem_nome.py';if(!/\.py$/.test(n))n+='.py';nameEl.value=n;const f=load();f[n]=code.value;const ok=store(f);cur=n;refreshFiles();files.value=n;
+ st.className=ok?'':'bad';st.textContent=ok?`Salvo como ${n}.`:'Não foi possível salvar neste navegador. Use Baixar .py.'}
+$('save').onclick=save;
+$('dl').onclick=()=>{try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([code.value],{type:'text/x-python'}));a.download=nameEl.value||'codigo.py';a.click()}catch(e){}st.className='';st.textContent='Se o download não iniciou, use Salvar para guardar no navegador.'};
+$('new').onclick=()=>{code.value='';nameEl.value='novo.py';out.textContent='';errLine=0;gutter();suggest();st.className='';st.textContent='Novo arquivo.';code.focus()};
+$('del').onclick=()=>{const f=load(),n=files.value;if(!n||!f[n]){st.className='bad';st.textContent='Escolha um código salvo para excluir.';return}delete f[n];store(f);refreshFiles();st.className='';st.textContent=`${n} excluído.`};
+files.onchange=()=>{const f=load(),n=files.value;if(n&&f[n]!==undefined){code.value=f[n];nameEl.value=n;gutter();showCheck(false)}};
+function fail(e){let r;try{r=info(e)}catch(x){r={line:0,tp:'Erro',msg:String(e)}}
+ errLine=r.line;gutter();st.className='bad';st.textContent=`${r.tp}${r.line?' na linha '+r.line:''}: ${r.msg}`;
+ out.insertAdjacentHTML('beforeend','<span class="er">'+esc(r.tp+': '+r.msg)+'</span>');out.scrollIntoView({block:'nearest'})}
+window.addEventListener('error',ev=>{out.insertAdjacentHTML('beforeend','<span class="er">'+esc('Erro: '+ev.message)+'</span>')});
+$('run').onclick=()=>{
+ out.textContent='';st.className='';st.textContent='Executando…';
+ try{
+  if(!window.Sk)throw new Error('O interpretador ainda está carregando ou não carregou. Aguarde alguns segundos e tente de novo.');
+  if(showCheck(false))return;
+  sk();Sk.execStart=Date.now();const t0=performance.now();
+  Sk.misceval.asyncToPromise(()=>Sk.importMainWithBody('<stdin>',false,code.value,true)).then(()=>{
+   st.className='';st.textContent=`Executado em ${Math.round(performance.now()-t0)} ms.`;
+   if(!out.textContent)out.textContent='(O código rodou, mas não imprimiu nada. Use print() para ver resultados.)';
+  },fail)
+ }catch(e){fail(e)}};
+// início
+refreshFiles();code.value=START;gutter();suggest();showCheck(false);
+st.className='';st.textContent='Carregando o interpretador Python…';
+window.skReady.then(ok=>{
+ if(!ok){st.className='bad';st.textContent='Não foi possível carregar o interpretador Python. Conecte-se à internet e recarregue a página. Falhou em: '+(window.skFail||[]).map(u=>{try{return new URL(u).host}catch(x){return u}}).join(', ');return}
+ showCheck(false);
+ try{new Function('return 1')()}catch(e){st.className='bad';st.textContent='Este ambiente bloqueia a execução dinâmica de código, então o Executar não funciona aqui.'}
+});
+</script>
+</body>
+</html>
